@@ -30,6 +30,9 @@ export interface Frame {
     aperture?: string; // e.g. "f/2.8"
     shutterSpeed?: string; // e.g. "1/250"
     memo?: string;
+    latitude?: number;
+    longitude?: number;
+    locationAccuracy?: number;
 }
 
 export type RollStatus = 'active' | 'finished';

@@ -20,11 +20,11 @@ interface RollState {
         patch: Partial<Pick<Roll, 'filmId' | 'cameraId' | 'maxFrames' | 'memo'>>,
     ) => void;
     setCurrentLens: (rollId: string, lensId: string | undefined) => void;
-    recordFrame: (rollId: string) => void;
+    recordFrame: (rollId: string) => string; // returns new frame id
     updateFrame: (
         rollId: string,
         frameId: string,
-        patch: Partial<Pick<Frame, 'lensId' | 'aperture' | 'shutterSpeed' | 'memo' | 'timestamp'>>,
+        patch: Partial<Pick<Frame, 'lensId' | 'aperture' | 'shutterSpeed' | 'memo' | 'timestamp' | 'latitude' | 'longitude' | 'locationAccuracy'>>,
     ) => void;
     deleteFrame: (rollId: string, frameId: string) => void;
     insertFrame: (rollId: string, atFrameNumber: number) => string; // returns new frame id
@@ -100,7 +100,7 @@ export const useRollStore = create<RollState>()(
 
             recordFrame: (rollId) => {
                 const roll = get().rolls.find((r) => r.id === rollId);
-                if (!roll) return;
+                if (!roll) return '';
 
                 const frame: Frame = {
                     id: nanoid(),
@@ -113,6 +113,7 @@ export const useRollStore = create<RollState>()(
                         r.id === rollId ? { ...r, frames: [...r.frames, frame] } : r,
                     ),
                 }));
+                return frame.id;
             },
 
             updateFrame: (rollId, frameId, patch) =>

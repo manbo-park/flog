@@ -1,4 +1,4 @@
-import { Clock, FileText, Search } from 'lucide-react';
+import { Clock, FileText, MapPin, Search } from 'lucide-react';
 import type { Frame } from '@/types';
 import { useMasterDataStore } from '@/store/masterDataStore';
 
@@ -25,7 +25,14 @@ export function FrameItem({ frame, onEdit }: FrameItemProps) {
         return `${dateStr} ${timeStr}`;
     })();
 
-    const hasMetadata = frame.lensId || frame.aperture || frame.shutterSpeed || frame.memo;
+    const hasMetadata = frame.lensId || frame.aperture || frame.shutterSpeed || frame.memo || frame.latitude != null;
+
+    const locationStr = (() => {
+        if (frame.latitude == null || frame.longitude == null) return null;
+        const lat = Math.abs(frame.latitude).toFixed(4) + (frame.latitude >= 0 ? '°N' : '°S');
+        const lng = Math.abs(frame.longitude).toFixed(4) + (frame.longitude >= 0 ? '°E' : '°W');
+        return `${lat}, ${lng}`;
+    })();
 
     return (
         <button
@@ -67,6 +74,12 @@ export function FrameItem({ frame, onEdit }: FrameItemProps) {
                             <div className="flex items-center gap-1 text-film-muted text-xs font-mono">
                                 <FileText size={11} className="shrink-0" />
                                 <span>{frame.memo}</span>
+                            </div>
+                        )}
+                        {locationStr && (
+                            <div className="flex items-center gap-1 text-film-muted text-xs font-mono">
+                                <MapPin size={11} className="shrink-0" />
+                                <span>{locationStr}</span>
                             </div>
                         )}
                     </div>

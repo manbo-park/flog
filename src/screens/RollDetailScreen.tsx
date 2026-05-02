@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Trash2, Play, Plus, Pencil, Camera, FileText, ClipboardCopy, Check } from 'lucide-react';
+import { Trash2, Play, Plus, Pencil, Camera, FileText, ClipboardCopy, Check, MapPin } from 'lucide-react';
 import { PageLayout } from '@/components/ui/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -456,6 +456,37 @@ export function RollDetailScreen() {
                         onChange={(e) => setMemo(e.target.value)}
                         placeholder="이 컷에 대한 메모..."
                     />
+
+                    {editingFrame?.latitude != null && editingFrame?.longitude != null && (
+                        <div className="flex flex-col gap-1">
+                            <label className="font-mono text-xs text-film-muted">위치 정보</label>
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(
+                                        `${editingFrame!.latitude},${editingFrame!.longitude}`,
+                                    );
+                                    setCopied(true);
+                                    setToastFading(false);
+                                    setTimeout(() => setToastFading(true), 1800);
+                                    setTimeout(() => setCopied(false), 2400);
+                                }}
+                                className="flex items-center gap-2 bg-film-surface border border-film-border rounded-lg px-3 py-2 font-mono text-xs text-film-accent active:opacity-70 transition-opacity text-left"
+                            >
+                                <MapPin size={12} className="shrink-0" />
+                                <span>
+                                    {Math.abs(editingFrame.latitude).toFixed(6)}
+                                    {editingFrame.latitude >= 0 ? '°N' : '°S'},&nbsp;
+                                    {Math.abs(editingFrame.longitude).toFixed(6)}
+                                    {editingFrame.longitude >= 0 ? '°E' : '°W'}
+                                </span>
+                                {editingFrame.locationAccuracy != null && (
+                                    <span className="ml-auto text-film-muted">
+                                        ±{Math.round(editingFrame.locationAccuracy)}m
+                                    </span>
+                                )}
+                            </button>
+                        </div>
+                    )}
 
                     <div className="flex gap-3 mt-1">
                         <Button variant="danger" size="md" fullWidth onClick={handleDeleteFrame}>

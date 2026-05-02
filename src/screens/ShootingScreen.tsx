@@ -10,10 +10,10 @@ import { useSettingsStore } from '@/store/settingsStore';
 
 export function ShootingScreen() {
     const navigate = useNavigate();
-    const { rolls, activeRollId, recordFrame, deleteFrame, finishRoll, setCurrentLens } =
+    const { rolls, activeRollId, recordFrame, updateFrame, deleteFrame, finishRoll, setCurrentLens } =
         useRollStore();
     const { films, cameras, lenses } = useMasterDataStore();
-    const { autoFinishRoll } = useSettingsStore();
+    const { autoFinishRoll, recordLocation } = useSettingsStore();
     const [showFinishConfirm, setShowFinishConfirm] = useState(false);
     const [showUndoConfirm, setShowUndoConfirm] = useState(false);
     const [showLensSwap, setShowLensSwap] = useState(false);
@@ -47,8 +47,22 @@ export function ShootingScreen() {
     const progressPct = Math.min((frameCount / maxFrames) * 100, 100);
 
     function handleRecord() {
-        recordFrame(activeRoll!.id);
+        const frameId = recordFrame(activeRoll!.id);
         const newCount = frameCount + 1;
+
+        if (recordLocation && frameId) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    updateFrame(activeRoll!.id, frameId, {
+                        latitude: pos.coords.latitude,
+                        longitude: pos.coords.longitude,
+                        locationAccuracy: pos.coords.accuracy,
+                    });
+                },
+                () => {},
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
+            );
+        }
         if (newCount >= maxFrames && autoFinishRoll) {
             finishRoll(activeRoll!.id);
             navigate('/rolls', { replace: true });
