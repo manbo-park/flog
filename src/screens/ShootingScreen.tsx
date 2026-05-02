@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { useRollStore } from '@/store/rollStore';
 import { useMasterDataStore } from '@/store/masterDataStore';
+import { useSettingsStore } from '@/store/settingsStore';
 
 export function ShootingScreen() {
     const navigate = useNavigate();
     const { rolls, activeRollId, recordFrame, deleteFrame, finishRoll, setCurrentLens } =
         useRollStore();
     const { films, cameras, lenses } = useMasterDataStore();
+    const { autoFinishRoll } = useSettingsStore();
     const [showFinishConfirm, setShowFinishConfirm] = useState(false);
     const [showUndoConfirm, setShowUndoConfirm] = useState(false);
     const [showLensSwap, setShowLensSwap] = useState(false);
@@ -46,9 +48,15 @@ export function ShootingScreen() {
 
     function handleRecord() {
         recordFrame(activeRoll!.id);
+        const newCount = frameCount + 1;
+        if (newCount >= maxFrames && autoFinishRoll) {
+            finishRoll(activeRoll!.id);
+            navigate('/rolls', { replace: true });
+            return;
+        }
         setJustRecorded(true);
         setTimeout(() => setJustRecorded(false), 600);
-        if (frameCount + 1 === maxFrames && !hasShownOverageModal) {
+        if (newCount === maxFrames && !hasShownOverageModal) {
             setShowOverageModal(true);
             setHasShownOverageModal(true);
         }
