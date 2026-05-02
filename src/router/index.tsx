@@ -4,6 +4,7 @@ import { FilmListScreen } from '@/screens/FilmListScreen';
 import { ShootingScreen } from '@/screens/ShootingScreen';
 import { RollDetailScreen } from '@/screens/RollDetailScreen';
 import { MasterDataScreen } from '@/screens/MasterDataScreen';
+import { SettingsScreen } from '@/screens/SettingsScreen';
 
 export const router = createBrowserRouter([
     { path: '/', element: <SplashScreen /> },
@@ -11,5 +12,6 @@ export const router = createBrowserRouter([
     { path: '/rolls/:rollId', element: <RollDetailScreen /> },
     { path: '/shoot', element: <ShootingScreen /> },
     { path: '/master', element: <MasterDataScreen /> },
+    { path: '/settings', element: <SettingsScreen /> },
     { path: '*', element: <Navigate to="/" replace /> },
 ]);
