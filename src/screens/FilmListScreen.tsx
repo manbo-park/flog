@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Upload, Download, Film, Trash2, AlertTriangle } from 'lucide-react';
+import { Upload, Download, Film, Trash2, AlertTriangle, Settings, Database } from 'lucide-react';
 import { PageLayout } from '@/components/ui/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -140,6 +140,20 @@ export function FilmListScreen() {
                         title="롤 전체 삭제"
                     >
                         <Trash2 size={16} />
+                    </button>
+                    <button
+                        onClick={() => navigate('/master')}
+                        className="p-2 text-film-muted hover:text-film-text transition-colors"
+                        title="기본 데이터"
+                    >
+                        <Database size={16} />
+                    </button>
+                    <button
+                        onClick={() => navigate('/settings')}
+                        className="p-2 text-film-muted hover:text-film-text transition-colors"
+                        title="설정"
+                    >
+                        <Settings size={16} />
                     </button>
                 </div>
             }
@@ -331,6 +345,7 @@ export function FilmListScreen() {
                     </Button>
                 </div>
             </Modal>
+
         </PageLayout>
     );
 }

@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Database } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface PageLayoutProps {
     title: ReactNode;
@@ -55,15 +55,6 @@ export function PageLayout({
                     </div>
                     <div className="flex items-center gap-2">
                         {rightAction}
-                        {!showBack && (
-                            <button
-                                onClick={() => navigate('/master')}
-                                className="text-film-muted hover:text-film-text transition-colors p-1"
-                                title="기본 데이터"
-                            >
-                                <Database size={18} />
-                            </button>
-                        )}
                     </div>
                 </div>
             </header>
