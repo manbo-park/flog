@@ -198,6 +198,8 @@ export function RollDetailScreen() {
             if (apertureNum != null && !isNaN(apertureNum)) entry.aperture = apertureNum;
             if (frame.shutterSpeed) entry.shutter = frame.shutterSpeed;
             if (frame.memo) entry.memo = frame.memo;
+            if (frame.latitude != null) entry.lat = frame.latitude;
+            if (frame.longitude != null) entry.lng = frame.longitude;
             return entry;
         });
 
