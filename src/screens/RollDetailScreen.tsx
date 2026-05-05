@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Trash2, Play, Plus, Pencil, Camera, FileText, ClipboardCopy, Check, MapPin } from 'lucide-react';
+import {
+    Trash2,
+    Play,
+    Plus,
+    Pencil,
+    Camera,
+    FileText,
+    ClipboardCopy,
+    Check,
+    MapPin,
+} from 'lucide-react';
 import { PageLayout } from '@/components/ui/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
@@ -624,7 +634,7 @@ export function RollDetailScreen() {
                     >
                         <Check size={13} className="text-film-accent shrink-0" />
                         <span className="font-mono text-xs text-film-text whitespace-nowrap">
-                            클립보드에 복사됨
+                            fixif 데이터가 클립보드에 복사되었습니다.
                         </span>
                     </div>
                 </div>
