@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from 'react-router-dom';
 import { Upload, Download, Film, Trash2, AlertTriangle, Settings, Database } from 'lucide-react';
@@ -46,11 +46,14 @@ export function FilmListScreen() {
     const [importError, setImportError] = useState<string | null>(null);
     const [confirmClear, setConfirmClear] = useState(false);
 
-    const byDate = (a: (typeof rolls)[0], b: (typeof rolls)[0]) =>
-        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime();
-
-    const activeRolls = rolls.filter((r) => r.status === 'active').sort(byDate);
-    const finishedRolls = rolls.filter((r) => r.status === 'finished').sort(byDate);
+    const { activeRolls, finishedRolls } = useMemo(() => {
+        const byDate = (a: (typeof rolls)[0], b: (typeof rolls)[0]) =>
+            new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime();
+        return {
+            activeRolls: rolls.filter((r) => r.status === 'active').sort(byDate),
+            finishedRolls: rolls.filter((r) => r.status === 'finished').sort(byDate),
+        };
+    }, [rolls]);
 
     function validateAndStart() {
         const newErrors: Record<string, string> = {};
