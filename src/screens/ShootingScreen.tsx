@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, List, Film, Camera, RefreshCw } from 'lucide-react';
 import { PageLayout } from '@/components/ui/PageLayout';
@@ -10,18 +11,30 @@ import { useSettingsStore } from '@/store/settingsStore';
 
 export function ShootingScreen() {
     const navigate = useNavigate();
-    const { rolls, activeRollId, recordFrame, updateFrame, deleteFrame, finishRoll, setCurrentLens } =
-        useRollStore();
-    const { films, cameras, lenses } = useMasterDataStore();
-    const { autoFinishRoll, recordLocation } = useSettingsStore();
+    const activeRoll = useRollStore((s) =>
+        s.rolls.find((r) => r.id === s.activeRollId && r.status === 'active'),
+    );
+    const { recordFrame, updateFrame, deleteFrame, finishRoll, setCurrentLens } = useRollStore(
+        useShallow((s) => ({
+            recordFrame: s.recordFrame,
+            updateFrame: s.updateFrame,
+            deleteFrame: s.deleteFrame,
+            finishRoll: s.finishRoll,
+            setCurrentLens: s.setCurrentLens,
+        })),
+    );
+    const { films, cameras, lenses } = useMasterDataStore(
+        useShallow((s) => ({ films: s.films, cameras: s.cameras, lenses: s.lenses })),
+    );
+    const { autoFinishRoll, recordLocation } = useSettingsStore(
+        useShallow((s) => ({ autoFinishRoll: s.autoFinishRoll, recordLocation: s.recordLocation })),
+    );
     const [showFinishConfirm, setShowFinishConfirm] = useState(false);
     const [showUndoConfirm, setShowUndoConfirm] = useState(false);
     const [showLensSwap, setShowLensSwap] = useState(false);
     const [showOverageModal, setShowOverageModal] = useState(false);
     const [hasShownOverageModal, setHasShownOverageModal] = useState(false);
     const [justRecorded, setJustRecorded] = useState(false);
-
-    const activeRoll = rolls.find((r) => r.id === activeRollId && r.status === 'active');
 
     if (!activeRoll) {
         return (

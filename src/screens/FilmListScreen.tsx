@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useNavigate } from 'react-router-dom';
 import { Upload, Download, Film, Trash2, AlertTriangle, Settings, Database } from 'lucide-react';
 import { PageLayout } from '@/components/ui/PageLayout';
@@ -19,8 +20,21 @@ const FRAME_COUNT_OPTIONS = [
 
 export function FilmListScreen() {
     const navigate = useNavigate();
-    const { rolls, startRoll, importRolls, clearAll: clearRolls } = useRollStore();
-    const { films, cameras, importMasterData } = useMasterDataStore();
+    const { rolls, startRoll, importRolls, clearAll: clearRolls } = useRollStore(
+        useShallow((s) => ({
+            rolls: s.rolls,
+            startRoll: s.startRoll,
+            importRolls: s.importRolls,
+            clearAll: s.clearAll,
+        })),
+    );
+    const { films, cameras, importMasterData } = useMasterDataStore(
+        useShallow((s) => ({
+            films: s.films,
+            cameras: s.cameras,
+            importMasterData: s.importMasterData,
+        })),
+    );
 
     const [showNewRoll, setShowNewRoll] = useState(false);
     const [filmId, setFilmId] = useState('');

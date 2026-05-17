@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
     Trash2,
@@ -57,8 +58,8 @@ const SHUTTER_OPTIONS = [
 export function RollDetailScreen() {
     const { rollId } = useParams<{ rollId: string }>();
     const navigate = useNavigate();
+    const roll = useRollStore((s) => s.rolls.find((r) => r.id === rollId));
     const {
-        rolls,
         deleteRoll,
         updateFrame,
         updateRoll,
@@ -66,10 +67,20 @@ export function RollDetailScreen() {
         insertFrame,
         resumeRoll,
         setActiveRollId,
-    } = useRollStore();
-    const { films, cameras, lenses } = useMasterDataStore();
-
-    const roll = rolls.find((r) => r.id === rollId);
+    } = useRollStore(
+        useShallow((s) => ({
+            deleteRoll: s.deleteRoll,
+            updateFrame: s.updateFrame,
+            updateRoll: s.updateRoll,
+            deleteFrame: s.deleteFrame,
+            insertFrame: s.insertFrame,
+            resumeRoll: s.resumeRoll,
+            setActiveRollId: s.setActiveRollId,
+        })),
+    );
+    const { films, cameras, lenses } = useMasterDataStore(
+        useShallow((s) => ({ films: s.films, cameras: s.cameras, lenses: s.lenses })),
+    );
 
     const [editingFrame, setEditingFrame] = useState<Frame | null>(null);
     const [lensId, setLensId] = useState('');

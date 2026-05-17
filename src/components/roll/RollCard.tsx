@@ -9,10 +9,8 @@ interface RollCardProps {
 
 export function RollCard({ roll }: RollCardProps) {
     const navigate = useNavigate();
-    const { films, cameras } = useMasterDataStore();
-
-    const film = films.find((f) => f.id === roll.filmId);
-    const camera = cameras.find((c) => c.id === roll.cameraId);
+    const film = useMasterDataStore((s) => s.films.find((f) => f.id === roll.filmId));
+    const camera = useMasterDataStore((s) => s.cameras.find((c) => c.id === roll.cameraId));
 
     const fmt = (iso: string) =>
         new Date(iso).toLocaleDateString('ko-KR', {
