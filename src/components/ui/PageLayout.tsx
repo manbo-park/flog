@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { lockBodyScroll, unlockBodyScroll } from '@/lib/scrollLock';
 
 interface PageLayoutProps {
     title: ReactNode;
@@ -25,11 +26,11 @@ export function PageLayout({
 
     useEffect(() => {
         if (!noScroll) return;
-        document.body.style.overflow = 'hidden';
+        lockBodyScroll();
         document.body.style.position = 'fixed';
         document.body.style.width = '100%';
         return () => {
-            document.body.style.overflow = '';
+            unlockBodyScroll();
             document.body.style.position = '';
             document.body.style.width = '';
         };
